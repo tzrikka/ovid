@@ -45,5 +45,7 @@ func Flags(configFilePath altsrc.StringSourcer) []cli.Flag {
 				toml.TOML("temporal.task_queue", configFilePath),
 			),
 		},
+
+		// https://pkg.go.dev/go.temporal.io/sdk/internal#WorkerOptions
 	}
 }
