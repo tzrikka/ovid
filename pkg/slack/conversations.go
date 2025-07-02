@@ -28,18 +28,6 @@ const (
 )
 
 // https://docs.slack.dev/reference/methods/conversations.archive
-func (a *API) ConversationsArchive(ctx context.Context, req *ConversationsArchiveRequest) (*ConversationsArchiveResponse, error) {
-	resp := new(ConversationsArchiveResponse)
-	if err := a.httpPost(ctx, ConversationsArchiveName, req, resp); err != nil {
-		return nil, err
-	}
-	if !resp.OK {
-		return nil, errors.New("Slack API error: " + resp.Error)
-	}
-	return resp, nil
-}
-
-// https://docs.slack.dev/reference/methods/conversations.archive
 type ConversationsArchiveRequest struct {
 	Channel string `json:"channel"`
 }
@@ -49,10 +37,10 @@ type ConversationsArchiveResponse struct {
 	slackResponse
 }
 
-// https://docs.slack.dev/reference/methods/conversations.close
-func (a *API) ConversationsClose(ctx context.Context, req *ConversationsCloseRequest) (*ConversationsCloseResponse, error) {
-	resp := new(ConversationsCloseResponse)
-	if err := a.httpPost(ctx, ConversationsCloseName, req, resp); err != nil {
+// https://docs.slack.dev/reference/methods/conversations.archive
+func (a *API) ConversationsArchive(ctx context.Context, req *ConversationsArchiveRequest) (*ConversationsArchiveResponse, error) {
+	resp := new(ConversationsArchiveResponse)
+	if err := a.httpPost(ctx, ConversationsArchiveName, req, resp); err != nil {
 		return nil, err
 	}
 	if !resp.OK {
@@ -73,10 +61,10 @@ type ConversationsCloseResponse struct {
 	AlreadyClosed bool `json:"already_closed,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/conversations.create
-func (a *API) ConversationsCreate(ctx context.Context, req *ConversationsCreateRequest) (*ConversationsCreateResponse, error) {
-	resp := new(ConversationsCreateResponse)
-	if err := a.httpPost(ctx, ConversationsCreateName, req, resp); err != nil {
+// https://docs.slack.dev/reference/methods/conversations.close
+func (a *API) ConversationsClose(ctx context.Context, req *ConversationsCloseRequest) (*ConversationsCloseResponse, error) {
+	resp := new(ConversationsCloseResponse)
+	if err := a.httpPost(ctx, ConversationsCloseName, req, resp); err != nil {
 		return nil, err
 	}
 	if !resp.OK {
@@ -98,6 +86,42 @@ type ConversationsCreateResponse struct {
 	slackResponse
 
 	Channel map[string]any `json:"channel,omitempty"`
+}
+
+// https://docs.slack.dev/reference/methods/conversations.create
+func (a *API) ConversationsCreate(ctx context.Context, req *ConversationsCreateRequest) (*ConversationsCreateResponse, error) {
+	resp := new(ConversationsCreateResponse)
+	if err := a.httpPost(ctx, ConversationsCreateName, req, resp); err != nil {
+		return nil, err
+	}
+	if !resp.OK {
+		return nil, errors.New("Slack API error: " + resp.Error)
+	}
+	return resp, nil
+}
+
+// https://docs.slack.dev/reference/methods/conversations.history
+type ConversationsHistoryRequest struct {
+	Channel string `json:"channel"`
+
+	Cursor             string `json:"cursor,omitempty"`
+	IncludeAllMetadata bool   `json:"include_all_metadata,omitempty"`
+	Inclusive          bool   `json:"inclusive,omitempty"`
+	Latest             string `json:"latest,omitempty"`
+	Limit              int    `json:"limit,omitempty"`
+	Oldest             string `json:"oldest,omitempty"`
+}
+
+// https://docs.slack.dev/reference/methods/conversations.history
+type ConversationsHistoryResponse struct {
+	slackResponse
+
+	Latest    string           `json:"latest,omitempty"`
+	Messages  []map[string]any `json:"messages,omitempty"`
+	HasMore   bool             `json:"has_more,omitempty"`
+	IsLimited bool             `json:"is_limited,omitempty"` // Undocumented.
+	PinCount  int              `json:"pin_count,omitempty"`
+	// Undocumented: "channel_actions_ts" and "channel_actions_count".
 }
 
 // https://docs.slack.dev/reference/methods/conversations.history
@@ -133,51 +157,6 @@ func (a *API) ConversationsHistory(ctx context.Context, req *ConversationsHistor
 	return resp, nil
 }
 
-// https://docs.slack.dev/reference/methods/conversations.history
-type ConversationsHistoryRequest struct {
-	Channel string `json:"channel"`
-
-	Cursor             string `json:"cursor,omitempty"`
-	IncludeAllMetadata bool   `json:"include_all_metadata,omitempty"`
-	Inclusive          bool   `json:"inclusive,omitempty"`
-	Latest             string `json:"latest,omitempty"`
-	Limit              int    `json:"limit,omitempty"`
-	Oldest             string `json:"oldest,omitempty"`
-}
-
-// https://docs.slack.dev/reference/methods/conversations.history
-type ConversationsHistoryResponse struct {
-	slackResponse
-
-	Latest    string           `json:"latest,omitempty"`
-	Messages  []map[string]any `json:"messages,omitempty"`
-	HasMore   bool             `json:"has_more,omitempty"`
-	IsLimited bool             `json:"is_limited,omitempty"` // Undocumented.
-	PinCount  int              `json:"pin_count,omitempty"`
-	// Undocumented: "channel_actions_ts" and "channel_actions_count".
-}
-
-// https://docs.slack.dev/reference/methods/conversations.info
-func (a *API) ConversationsInfo(ctx context.Context, req *ConversationsInfoRequest) (*ConversationsInfoResponse, error) {
-	query := url.Values{}
-	query.Set("channel", req.Channel)
-	if req.IncludeLocale {
-		query.Set("include_locale", "true")
-	}
-	if req.IncludeNumMembers {
-		query.Set("include_num_members", "true")
-	}
-
-	resp := new(ConversationsInfoResponse)
-	if err := a.httpGet(ctx, ConversationsInfoName, query, resp); err != nil {
-		return nil, err
-	}
-	if !resp.OK {
-		return nil, errors.New("Slack API error: " + resp.Error)
-	}
-	return resp, nil
-}
-
 // https://docs.slack.dev/reference/methods/conversations.info
 type ConversationsInfoRequest struct {
 	Channel string `json:"channel"`
@@ -193,10 +172,19 @@ type ConversationsInfoResponse struct {
 	Channel map[string]any `json:"channel,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/conversations.invite
-func (a *API) ConversationsInvite(ctx context.Context, req *ConversationsInviteRequest) (*ConversationsInviteResponse, error) {
-	resp := new(ConversationsInviteResponse)
-	if err := a.httpPost(ctx, ConversationsInviteName, req, resp); err != nil {
+// https://docs.slack.dev/reference/methods/conversations.info
+func (a *API) ConversationsInfo(ctx context.Context, req *ConversationsInfoRequest) (*ConversationsInfoResponse, error) {
+	query := url.Values{}
+	query.Set("channel", req.Channel)
+	if req.IncludeLocale {
+		query.Set("include_locale", "true")
+	}
+	if req.IncludeNumMembers {
+		query.Set("include_num_members", "true")
+	}
+
+	resp := new(ConversationsInfoResponse)
+	if err := a.httpGet(ctx, ConversationsInfoName, query, resp); err != nil {
 		return nil, err
 	}
 	if !resp.OK {
@@ -221,10 +209,10 @@ type ConversationsInviteResponse struct {
 	Errors  []map[string]any `json:"errors,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/conversations.join
-func (a *API) ConversationsJoin(ctx context.Context, req *ConversationsJoinRequest) (*ConversationsJoinResponse, error) {
-	resp := new(ConversationsJoinResponse)
-	if err := a.httpPost(ctx, ConversationsJoinName, req, resp); err != nil {
+// https://docs.slack.dev/reference/methods/conversations.invite
+func (a *API) ConversationsInvite(ctx context.Context, req *ConversationsInviteRequest) (*ConversationsInviteResponse, error) {
+	resp := new(ConversationsInviteResponse)
+	if err := a.httpPost(ctx, ConversationsInviteName, req, resp); err != nil {
 		return nil, err
 	}
 	if !resp.OK {
@@ -245,10 +233,10 @@ type ConversationsJoinResponse struct {
 	Channel map[string]any `json:"channel,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/conversations.kick
-func (a *API) ConversationsKick(ctx context.Context, req *ConversationsKickRequest) (*ConversationsKickResponse, error) {
-	resp := new(ConversationsKickResponse)
-	if err := a.httpPost(ctx, ConversationsKickName, req, resp); err != nil {
+// https://docs.slack.dev/reference/methods/conversations.join
+func (a *API) ConversationsJoin(ctx context.Context, req *ConversationsJoinRequest) (*ConversationsJoinResponse, error) {
+	resp := new(ConversationsJoinResponse)
+	if err := a.httpPost(ctx, ConversationsJoinName, req, resp); err != nil {
 		return nil, err
 	}
 	if !resp.OK {
@@ -269,10 +257,10 @@ type ConversationsKickResponse struct {
 	slackResponse
 }
 
-// https://docs.slack.dev/reference/methods/conversations.leave
-func (a *API) ConversationsLeave(ctx context.Context, req *ConversationsLeaveRequest) (*ConversationsLeaveResponse, error) {
-	resp := new(ConversationsLeaveResponse)
-	if err := a.httpPost(ctx, ConversationsLeaveName, req, resp); err != nil {
+// https://docs.slack.dev/reference/methods/conversations.kick
+func (a *API) ConversationsKick(ctx context.Context, req *ConversationsKickRequest) (*ConversationsKickResponse, error) {
+	resp := new(ConversationsKickResponse)
+	if err := a.httpPost(ctx, ConversationsKickName, req, resp); err != nil {
 		return nil, err
 	}
 	if !resp.OK {
@@ -291,6 +279,34 @@ type ConversationsLeaveResponse struct {
 	slackResponse
 
 	NotInChannel bool `json:"not_in_channel,omitempty"`
+}
+
+// https://docs.slack.dev/reference/methods/conversations.leave
+func (a *API) ConversationsLeave(ctx context.Context, req *ConversationsLeaveRequest) (*ConversationsLeaveResponse, error) {
+	resp := new(ConversationsLeaveResponse)
+	if err := a.httpPost(ctx, ConversationsLeaveName, req, resp); err != nil {
+		return nil, err
+	}
+	if !resp.OK {
+		return nil, errors.New("Slack API error: " + resp.Error)
+	}
+	return resp, nil
+}
+
+// https://docs.slack.dev/reference/methods/conversations.list
+type ConversationsListRequest struct {
+	Cursor          string `json:"cursor,omitempty"`
+	ExcludeArchived bool   `json:"exclude_archived,omitempty"`
+	Limit           int    `json:"limit,omitempty"`
+	TeamID          string `json:"team_id,omitempty"`
+	Types           string `json:"types,omitempty"`
+}
+
+// https://docs.slack.dev/reference/methods/conversations.list
+type ConversationsListResponse struct {
+	slackResponse
+
+	Channels []map[string]any `json:"channels,omitempty"`
 }
 
 // https://docs.slack.dev/reference/methods/conversations.list
@@ -322,43 +338,6 @@ func (a *API) ConversationsList(ctx context.Context, req *ConversationsListReque
 	return resp, nil
 }
 
-// https://docs.slack.dev/reference/methods/conversations.list
-type ConversationsListRequest struct {
-	Cursor          string `json:"cursor,omitempty"`
-	ExcludeArchived bool   `json:"exclude_archived,omitempty"`
-	Limit           int    `json:"limit,omitempty"`
-	TeamID          string `json:"team_id,omitempty"`
-	Types           string `json:"types,omitempty"`
-}
-
-// https://docs.slack.dev/reference/methods/conversations.list
-type ConversationsListResponse struct {
-	slackResponse
-
-	Channels []map[string]any `json:"channels,omitempty"`
-}
-
-// https://docs.slack.dev/reference/methods/conversations.members
-func (a *API) ConversationsMembers(ctx context.Context, req *ConversationsMembersRequest) (*ConversationsMembersResponse, error) {
-	query := url.Values{}
-	query.Set("channel", req.Channel)
-	if req.Cursor != "" {
-		query.Set("cursor", req.Cursor)
-	}
-	if req.Limit != 0 {
-		query.Set("limit", strconv.Itoa(req.Limit))
-	}
-
-	resp := new(ConversationsMembersResponse)
-	if err := a.httpGet(ctx, ConversationsMembersName, query, resp); err != nil {
-		return nil, err
-	}
-	if !resp.OK {
-		return nil, errors.New("Slack API error: " + resp.Error)
-	}
-	return resp, nil
-}
-
 // https://docs.slack.dev/reference/methods/conversations.members
 type ConversationsMembersRequest struct {
 	Channel string `json:"channel"`
@@ -374,10 +353,19 @@ type ConversationsMembersResponse struct {
 	Members []string `json:"members,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/conversations.open
-func (a *API) ConversationsOpen(ctx context.Context, req *ConversationsOpenRequest) (*ConversationsOpenResponse, error) {
-	resp := new(ConversationsOpenResponse)
-	if err := a.httpPost(ctx, ConversationsOpenName, req, resp); err != nil {
+// https://docs.slack.dev/reference/methods/conversations.members
+func (a *API) ConversationsMembers(ctx context.Context, req *ConversationsMembersRequest) (*ConversationsMembersResponse, error) {
+	query := url.Values{}
+	query.Set("channel", req.Channel)
+	if req.Cursor != "" {
+		query.Set("cursor", req.Cursor)
+	}
+	if req.Limit != 0 {
+		query.Set("limit", strconv.Itoa(req.Limit))
+	}
+
+	resp := new(ConversationsMembersResponse)
+	if err := a.httpGet(ctx, ConversationsMembersName, query, resp); err != nil {
 		return nil, err
 	}
 	if !resp.OK {
@@ -403,10 +391,10 @@ type ConversationsOpenResponse struct {
 	Channel     map[string]any `json:"channel,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/conversations.rename
-func (a *API) ConversationsRename(ctx context.Context, req *ConversationsRenameRequest) (*ConversationsRenameResponse, error) {
-	resp := new(ConversationsRenameResponse)
-	if err := a.httpPost(ctx, ConversationsRenameName, req, resp); err != nil {
+// https://docs.slack.dev/reference/methods/conversations.open
+func (a *API) ConversationsOpen(ctx context.Context, req *ConversationsOpenRequest) (*ConversationsOpenResponse, error) {
+	resp := new(ConversationsOpenResponse)
+	if err := a.httpPost(ctx, ConversationsOpenName, req, resp); err != nil {
 		return nil, err
 	}
 	if !resp.OK {
@@ -426,6 +414,39 @@ type ConversationsRenameResponse struct {
 	slackResponse
 
 	Channel map[string]any `json:"channel,omitempty"`
+}
+
+// https://docs.slack.dev/reference/methods/conversations.rename
+func (a *API) ConversationsRename(ctx context.Context, req *ConversationsRenameRequest) (*ConversationsRenameResponse, error) {
+	resp := new(ConversationsRenameResponse)
+	if err := a.httpPost(ctx, ConversationsRenameName, req, resp); err != nil {
+		return nil, err
+	}
+	if !resp.OK {
+		return nil, errors.New("Slack API error: " + resp.Error)
+	}
+	return resp, nil
+}
+
+// https://docs.slack.dev/reference/methods/conversations.replies
+type ConversationsRepliesRequest struct {
+	Channel string `json:"channel"`
+	TS      string `json:"ts"`
+
+	Cursor             string `json:"cursor,omitempty"`
+	IncludeAllMetadata bool   `json:"include_all_metadata,omitempty"`
+	Inclusive          bool   `json:"inclusive,omitempty"`
+	Latest             string `json:"latest,omitempty"`
+	Limit              int    `json:"limit,omitempty"`
+	Oldest             string `json:"oldest,omitempty"`
+}
+
+// https://docs.slack.dev/reference/methods/conversations.replies
+type ConversationsRepliesResponse struct {
+	slackResponse
+
+	Messages []map[string]any `json:"messages,omitempty"`
+	HasMore  bool             `json:"has_more,omitempty"`
 }
 
 // https://docs.slack.dev/reference/methods/conversations.replies
@@ -462,39 +483,6 @@ func (a *API) ConversationsReplies(ctx context.Context, req *ConversationsReplie
 	return resp, nil
 }
 
-// https://docs.slack.dev/reference/methods/conversations.replies
-type ConversationsRepliesRequest struct {
-	Channel string `json:"channel"`
-	TS      string `json:"ts"`
-
-	Cursor             string `json:"cursor,omitempty"`
-	IncludeAllMetadata bool   `json:"include_all_metadata,omitempty"`
-	Inclusive          bool   `json:"inclusive,omitempty"`
-	Latest             string `json:"latest,omitempty"`
-	Limit              int    `json:"limit,omitempty"`
-	Oldest             string `json:"oldest,omitempty"`
-}
-
-// https://docs.slack.dev/reference/methods/conversations.replies
-type ConversationsRepliesResponse struct {
-	slackResponse
-
-	Messages []map[string]any `json:"messages,omitempty"`
-	HasMore  bool             `json:"has_more,omitempty"`
-}
-
-// https://docs.slack.dev/reference/methods/conversations.setPurpose
-func (a *API) ConversationsSetPurpose(ctx context.Context, req *ConversationsSetPurposeRequest) (*ConversationsSetPurposeResponse, error) {
-	resp := new(ConversationsSetPurposeResponse)
-	if err := a.httpPost(ctx, ConversationsSetPurposeName, req, resp); err != nil {
-		return nil, err
-	}
-	if !resp.OK {
-		return nil, errors.New("Slack API error: " + resp.Error)
-	}
-	return resp, nil
-}
-
 // https://docs.slack.dev/reference/methods/conversations.setPurpose
 type ConversationsSetPurposeRequest struct {
 	Channel string `json:"channel"`
@@ -508,10 +496,10 @@ type ConversationsSetPurposeResponse struct {
 	Channel map[string]any `json:"channel,omitempty"` // Empirically different from the documentation.
 }
 
-// https://docs.slack.dev/reference/methods/conversations.setTopic
-func (a *API) ConversationsSetTopic(ctx context.Context, req *ConversationsSetTopicRequest) (*ConversationsSetTopicResponse, error) {
-	resp := new(ConversationsSetTopicResponse)
-	if err := a.httpPost(ctx, ConversationsSetTopicName, req, resp); err != nil {
+// https://docs.slack.dev/reference/methods/conversations.setPurpose
+func (a *API) ConversationsSetPurpose(ctx context.Context, req *ConversationsSetPurposeRequest) (*ConversationsSetPurposeResponse, error) {
+	resp := new(ConversationsSetPurposeResponse)
+	if err := a.httpPost(ctx, ConversationsSetPurposeName, req, resp); err != nil {
 		return nil, err
 	}
 	if !resp.OK {
@@ -533,10 +521,10 @@ type ConversationsSetTopicResponse struct {
 	Channel map[string]any `json:"channel,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/conversations.unarchive
-func (a *API) ConversationsUnarchive(ctx context.Context, req *ConversationsUnarchiveRequest) (*ConversationsUnarchiveResponse, error) {
-	resp := new(ConversationsUnarchiveResponse)
-	if err := a.httpPost(ctx, ConversationsUnarchiveName, req, resp); err != nil {
+// https://docs.slack.dev/reference/methods/conversations.setTopic
+func (a *API) ConversationsSetTopic(ctx context.Context, req *ConversationsSetTopicRequest) (*ConversationsSetTopicResponse, error) {
+	resp := new(ConversationsSetTopicResponse)
+	if err := a.httpPost(ctx, ConversationsSetTopicName, req, resp); err != nil {
 		return nil, err
 	}
 	if !resp.OK {
@@ -553,4 +541,16 @@ type ConversationsUnarchiveRequest struct {
 // https://docs.slack.dev/reference/methods/conversations.unarchive
 type ConversationsUnarchiveResponse struct {
 	slackResponse
+}
+
+// https://docs.slack.dev/reference/methods/conversations.unarchive
+func (a *API) ConversationsUnarchive(ctx context.Context, req *ConversationsUnarchiveRequest) (*ConversationsUnarchiveResponse, error) {
+	resp := new(ConversationsUnarchiveResponse)
+	if err := a.httpPost(ctx, ConversationsUnarchiveName, req, resp); err != nil {
+		return nil, err
+	}
+	if !resp.OK {
+		return nil, errors.New("Slack API error: " + resp.Error)
+	}
+	return resp, nil
 }

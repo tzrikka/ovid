@@ -51,6 +51,19 @@ func RegisterActivities(cmd *cli.Command, w worker.Worker) {
 	registerActivity(w, a.ConversationsSetPurpose, ConversationsSetPurposeName)
 	registerActivity(w, a.ConversationsSetTopic, ConversationsSetTopicName)
 	registerActivity(w, a.ConversationsUnarchive, ConversationsUnarchiveName)
+
+	registerActivity(w, a.ReactionsAdd, ReactionsAddName)
+	registerActivity(w, a.ReactionsGet, ReactionsGetName)
+	registerActivity(w, a.ReactionsList, ReactionsListName)
+	registerActivity(w, a.ReactionsRemove, ReactionsRemoveName)
+
+	registerActivity(w, a.UsersConversations, UsersConversationsName)
+	registerActivity(w, a.UsersGetPresence, UsersGetPresenceName)
+	registerActivity(w, a.UsersIdentity, UsersIdentityName)
+	registerActivity(w, a.UsersInfo, UsersInfoName)
+	registerActivity(w, a.UsersList, UsersListName)
+	registerActivity(w, a.UsersLookupByEmail, UsersLookupByEmailName)
+	registerActivity(w, a.UsersProfileGet, UsersProfileGetName)
 }
 
 func registerActivity(w worker.Worker, f any, name string) {

@@ -15,18 +15,6 @@ const (
 )
 
 // https://docs.slack.dev/reference/methods/chat.delete
-func (a *API) ChatDelete(ctx context.Context, req *ChatDeleteRequest) (*ChatDeleteResponse, error) {
-	resp := new(ChatDeleteResponse)
-	if err := a.httpPost(ctx, ChatDeleteName, req, resp); err != nil {
-		return nil, err
-	}
-	if !resp.OK {
-		return nil, errors.New("Slack API error: " + resp.Error)
-	}
-	return resp, nil
-}
-
-// https://docs.slack.dev/reference/methods/chat.delete
 type ChatDeleteRequest struct {
 	Channel string `json:"channel"`
 	TS      string `json:"ts"`
@@ -42,14 +30,10 @@ type ChatDeleteResponse struct {
 	TS      string `json:"ts,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/chat.getPermalink
-func (a *API) ChatGetPermalink(ctx context.Context, req *ChatGetPermalinkRequest) (*ChatGetPermalinkResponse, error) {
-	query := url.Values{}
-	query.Set("channel", req.Channel)
-	query.Set("message_ts", req.MessageTS)
-
-	resp := new(ChatGetPermalinkResponse)
-	if err := a.httpGet(ctx, ChatGetPermalinkName, query, resp); err != nil {
+// https://docs.slack.dev/reference/methods/chat.delete
+func (a *API) ChatDelete(ctx context.Context, req *ChatDeleteRequest) (*ChatDeleteResponse, error) {
+	resp := new(ChatDeleteResponse)
+	if err := a.httpPost(ctx, ChatDeleteName, req, resp); err != nil {
 		return nil, err
 	}
 	if !resp.OK {
@@ -72,10 +56,14 @@ type ChatGetPermalinkResponse struct {
 	Permalink string `json:"permalink,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/chat.postEphemeral
-func (a *API) ChatPostEphemeral(ctx context.Context, req *ChatPostEphemeralRequest) (*ChatPostEphemeralResponse, error) {
-	resp := new(ChatPostEphemeralResponse)
-	if err := a.httpPost(ctx, ChatPostEphemeralName, req, resp); err != nil {
+// https://docs.slack.dev/reference/methods/chat.getPermalink
+func (a *API) ChatGetPermalink(ctx context.Context, req *ChatGetPermalinkRequest) (*ChatGetPermalinkResponse, error) {
+	query := url.Values{}
+	query.Set("channel", req.Channel)
+	query.Set("message_ts", req.MessageTS)
+
+	resp := new(ChatGetPermalinkResponse)
+	if err := a.httpGet(ctx, ChatGetPermalinkName, query, resp); err != nil {
 		return nil, err
 	}
 	if !resp.OK {
@@ -110,10 +98,10 @@ type ChatPostEphemeralResponse struct {
 	MessageTS string `json:"message_ts,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/chat.postMessage
-func (a *API) ChatPostMessage(ctx context.Context, req *ChatPostMessageRequest) (*ChatPostMessageResponse, error) {
-	resp := new(ChatPostMessageResponse)
-	if err := a.httpPost(ctx, ChatPostMessageName, req, resp); err != nil {
+// https://docs.slack.dev/reference/methods/chat.postEphemeral
+func (a *API) ChatPostEphemeral(ctx context.Context, req *ChatPostEphemeralRequest) (*ChatPostEphemeralResponse, error) {
+	resp := new(ChatPostEphemeralResponse)
+	if err := a.httpPost(ctx, ChatPostEphemeralName, req, resp); err != nil {
 		return nil, err
 	}
 	if !resp.OK {
@@ -151,10 +139,10 @@ type ChatPostMessageResponse struct {
 	Message map[string]any `json:"message,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/chat.update
-func (a *API) ChatUpdate(ctx context.Context, req *ChatUpdateRequest) (*ChatUpdateResponse, error) {
-	resp := new(ChatUpdateResponse)
-	if err := a.httpPost(ctx, ChatUpdateName, req, resp); err != nil {
+// https://docs.slack.dev/reference/methods/chat.postMessage
+func (a *API) ChatPostMessage(ctx context.Context, req *ChatPostMessageRequest) (*ChatPostMessageResponse, error) {
+	resp := new(ChatPostMessageResponse)
+	if err := a.httpPost(ctx, ChatPostMessageName, req, resp); err != nil {
 		return nil, err
 	}
 	if !resp.OK {
@@ -189,4 +177,16 @@ type ChatUpdateResponse struct {
 	TS      string         `json:"ts,omitempty"`
 	Text    string         `json:"text,omitempty"`
 	Message map[string]any `json:"message,omitempty"`
+}
+
+// https://docs.slack.dev/reference/methods/chat.update
+func (a *API) ChatUpdate(ctx context.Context, req *ChatUpdateRequest) (*ChatUpdateResponse, error) {
+	resp := new(ChatUpdateResponse)
+	if err := a.httpPost(ctx, ChatUpdateName, req, resp); err != nil {
+		return nil, err
+	}
+	if !resp.OK {
+		return nil, errors.New("Slack API error: " + resp.Error)
+	}
+	return resp, nil
 }
