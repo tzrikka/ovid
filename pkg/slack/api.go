@@ -13,7 +13,6 @@ import (
 	"go.temporal.io/sdk/temporal"
 
 	"github.com/tzrikka/ovid/pkg/client"
-	"github.com/tzrikka/thrippy/pkg/links/slack"
 )
 
 type slackResponse struct {
@@ -31,28 +30,22 @@ type responseMetadata struct {
 	NextCursor string   `json:"next_cursor,omitempty"`
 }
 
-const (
-	providerName = "slack"
-	govTemplate  = "slack-oauth-gov"
-	urlPrefix    = "slack."
-)
-
 func (a *API) httpRequestPrep(ctx context.Context, urlSuffix string) (l log.Logger, apiURL, botToken string, err error) {
 	l = activity.GetLogger(ctx)
 
 	var template string
 	var secrets map[string]string
-	template, secrets, err = a.thrippy.LinkData(ctx, providerName)
+	template, secrets, err = a.thrippy.LinkData(ctx, "slack")
 	if err != nil {
 		return
 	}
 
-	urlBase := slack.DefaultBaseURL
-	if template == govTemplate {
-		urlBase = slack.GovBaseURL
+	urlBase := "https://slack.com"
+	if template == "slack-oauth-gov" {
+		urlBase = "https://slack-gov.com" // https://docs.slack.dev/govslack
 	}
 
-	apiURL, err = url.JoinPath(urlBase, "api", strings.TrimPrefix(urlSuffix, urlPrefix))
+	apiURL, err = url.JoinPath(urlBase, "api", strings.TrimPrefix(urlSuffix, "slack."))
 	if err != nil {
 		msg := "failed to construct Slack API URL"
 		l.Error(msg, "error", err.Error(), "url_base", urlBase, "url_suffix", urlSuffix)

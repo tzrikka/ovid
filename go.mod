@@ -5,7 +5,6 @@ go 1.24.4
 require (
 	github.com/lithammer/shortuuid/v4 v4.2.0
 	github.com/rs/zerolog v1.34.0
-	github.com/tzrikka/thrippy v1.2.0
 	github.com/tzrikka/thrippy-api v1.1.1
 	github.com/tzrikka/xdg v1.2.3
 	github.com/urfave/cli-altsrc/v3 v3.0.1
@@ -34,7 +33,6 @@ require (
 	github.com/stretchr/testify v1.10.0 // indirect
 	go.temporal.io/api v1.50.0 // indirect
 	golang.org/x/net v0.41.0 // indirect
-	golang.org/x/oauth2 v0.30.0 // indirect
 	golang.org/x/sync v0.15.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/text v0.26.0 // indirect
