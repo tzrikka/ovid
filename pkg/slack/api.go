@@ -13,6 +13,7 @@ import (
 	"go.temporal.io/sdk/temporal"
 
 	"github.com/tzrikka/ovid/pkg/client"
+	"github.com/tzrikka/thrippy/pkg/links/slack"
 )
 
 type slackResponse struct {
@@ -32,19 +33,24 @@ type responseMetadata struct {
 
 const (
 	providerName = "slack"
+	govTemplate  = "slack-oauth-gov"
 	urlPrefix    = "slack."
 )
 
 func (a *API) httpRequestPrep(ctx context.Context, urlSuffix string) (l log.Logger, apiURL, botToken string, err error) {
 	l = activity.GetLogger(ctx)
 
-	var creds map[string]string
-	creds, err = a.thrippy.LinkCreds(ctx, providerName)
+	var template string
+	var secrets map[string]string
+	template, secrets, err = a.thrippy.LinkData(ctx, providerName)
 	if err != nil {
 		return
 	}
 
-	urlBase := "https://slack.com"
+	urlBase := slack.DefaultBaseURL
+	if template == govTemplate {
+		urlBase = slack.GovBaseURL
+	}
 
 	apiURL, err = url.JoinPath(urlBase, "api", strings.TrimPrefix(urlSuffix, urlPrefix))
 	if err != nil {
@@ -54,9 +60,9 @@ func (a *API) httpRequestPrep(ctx context.Context, urlSuffix string) (l log.Logg
 		return
 	}
 
-	botToken = creds["bot_token"]
+	botToken = secrets["bot_token"]
 	if botToken == "" {
-		botToken = creds["access_token"] // OAuth token, possibly short-lived.
+		botToken = secrets["access_token"] // OAuth token, possibly short-lived.
 	}
 	if botToken == "" {
 		msg := "Slack bot token not found in Thrippy link credentials"

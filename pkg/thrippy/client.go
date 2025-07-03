@@ -78,3 +78,37 @@ func (t *LinkClient) LinkCreds(ctx context.Context, providerName string) (map[st
 
 	return resp.GetCredentials(), nil
 }
+
+func (t *LinkClient) LinkData(ctx context.Context, providerName string) (string, map[string]string, error) {
+	l := activity.GetLogger(ctx)
+
+	conn, err := t.connection(l, providerName)
+	if err != nil {
+		return "", nil, err
+	}
+	defer conn.Close()
+
+	c := thrippypb.NewThrippyServiceClient(conn)
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+
+	// Template.
+	resp1, err := c.GetLink(ctx, thrippypb.GetLinkRequest_builder{
+		LinkId: proto.String(t.LinkID),
+	}.Build())
+	if err != nil {
+		l.Error("Thrippy GetLink error", "error", err.Error(), "link_id", t.LinkID)
+		return "", nil, err
+	}
+
+	// Credentials.
+	resp2, err := c.GetCredentials(ctx, thrippypb.GetCredentialsRequest_builder{
+		LinkId: proto.String(t.LinkID),
+	}.Build())
+	if err != nil {
+		l.Error("Thrippy GetCredentials error", "error", err.Error(), "link_id", t.LinkID)
+		return "", nil, err
+	}
+
+	return resp1.GetTemplate(), resp2.GetCredentials(), nil
+}
