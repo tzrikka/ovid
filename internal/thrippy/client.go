@@ -39,6 +39,8 @@ func NewLinkClient(linkID string, cmd *cli.Command) LinkClient {
 	}
 }
 
+// connection creates a gRPC client connection to the receiver's server address.
+// It supports both secure and insecure connections, based on the given credentials.
 func (t *LinkClient) connection(l log.Logger, providerName string) (*grpc.ClientConn, error) {
 	if t.LinkID == "" {
 		msg := "Thrippy link ID not configured for " + providerName
@@ -60,6 +62,7 @@ func (t *LinkClient) connection(l log.Logger, providerName string) (*grpc.Client
 	return conn, err
 }
 
+// LinkCreds returns the saved secrets corresponding to the receiver's Thrippy link ID.
 func (t *LinkClient) LinkCreds(ctx context.Context, providerName string) (map[string]string, error) {
 	l := activity.GetLogger(ctx)
 
@@ -84,6 +87,7 @@ func (t *LinkClient) LinkCreds(ctx context.Context, providerName string) (map[st
 	return resp.GetCredentials(), nil
 }
 
+// LinkData returns the template name and saved secrets corresponding to the receiver's Thrippy link ID.
 func (t *LinkClient) LinkData(ctx context.Context, providerName string) (string, map[string]string, error) {
 	l := activity.GetLogger(ctx)
 
