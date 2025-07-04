@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"runtime/debug"
 
@@ -32,7 +33,8 @@ func main() {
 	}
 
 	if err := cmd.Run(context.Background(), os.Args); err != nil {
-		log.Fatal().Err(err).Caller().Send()
+		fmt.Printf("Error: %v\n", err)
+		os.Exit(1)
 	}
 }
 
@@ -45,12 +47,12 @@ func flags() []cli.Flag {
 	}
 
 	// Core settings.
-	configFilePath := configFile()
-	fs = append(fs, temporal.Flags(configFilePath)...)
-	fs = append(fs, thrippy.Flags(configFilePath)...)
+	path := configFile()
+	fs = append(fs, temporal.Flags(path)...)
+	fs = append(fs, thrippy.Flags(path)...)
 
 	// Supported Thrippy Links IDs.
-	fs = append(fs, slack.LinkIDFlag(configFilePath))
+	fs = append(fs, slack.LinkIDFlag(path))
 
 	return fs
 }
