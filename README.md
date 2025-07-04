@@ -1,1 +1,1 @@
-# Temporal Worker Using Thrippy And Omdient
+# Temporal Worker Using Thrippy and Omdient

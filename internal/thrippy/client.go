@@ -1,3 +1,8 @@
+// Package thrippy provides minimal and lightweight wrappers for some client
+// functionalities of the [Thrippy gRPC service]. It is meant to facilitate
+// code reuse, not to provide a complete native layer on top of gRPC.
+//
+// [Thrippy gRPC service]: https://github.com/tzrikka/thrippy-api/blob/main/proto/thrippy/v1/thrippy.proto
 package thrippy
 
 import (

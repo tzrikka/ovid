@@ -15,3 +15,9 @@ func TestConfigDirAndFile(t *testing.T) {
 		t.Errorf("configFile() = %q, want %q", got.SourceURI(), want)
 	}
 }
+
+func TestFlags(t *testing.T) {
+	if len(flags()) == 0 {
+		t.Errorf("flags() should never be nil or empty")
+	}
+}

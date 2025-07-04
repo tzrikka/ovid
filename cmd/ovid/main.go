@@ -9,9 +9,9 @@ import (
 	altsrc "github.com/urfave/cli-altsrc/v3"
 	"github.com/urfave/cli/v3"
 
+	"github.com/tzrikka/ovid/internal/temporal"
+	"github.com/tzrikka/ovid/internal/thrippy"
 	"github.com/tzrikka/ovid/pkg/slack"
-	"github.com/tzrikka/ovid/pkg/temporal"
-	"github.com/tzrikka/ovid/pkg/thrippy"
 	"github.com/tzrikka/xdg"
 )
 
@@ -21,32 +21,38 @@ const (
 )
 
 func main() {
-	buildInfo, _ := debug.ReadBuildInfo()
-	configFilePath := configFile()
-
-	flags := []cli.Flag{
-		&cli.BoolFlag{
-			Name:  "dev",
-			Usage: "simple setup, but unsafe for production",
-		},
-	}
-
-	flags = append(flags, temporal.Flags(configFilePath)...)
-	flags = append(flags, thrippy.Flags(configFilePath)...)
-
-	flags = append(flags, slack.LinkIDFlag(configFilePath))
+	bi, _ := debug.ReadBuildInfo()
 
 	cmd := &cli.Command{
 		Name:    "ovid",
 		Usage:   "Temporal worker using Thrippy and Omdient",
-		Version: buildInfo.Main.Version,
-		Flags:   flags,
+		Version: bi.Main.Version,
+		Flags:   flags(),
 		Action:  temporal.Start,
 	}
 
 	if err := cmd.Run(context.Background(), os.Args); err != nil {
 		log.Fatal().Err(err).Caller().Send()
 	}
+}
+
+func flags() []cli.Flag {
+	fs := []cli.Flag{
+		&cli.BoolFlag{
+			Name:  "dev",
+			Usage: "simple setup, but unsafe for production",
+		},
+	}
+
+	// Core settings.
+	configFilePath := configFile()
+	fs = append(fs, temporal.Flags(configFilePath)...)
+	fs = append(fs, thrippy.Flags(configFilePath)...)
+
+	// Supported Thrippy Links IDs.
+	fs = append(fs, slack.LinkIDFlag(configFilePath))
+
+	return fs
 }
 
 // configFile returns the path to the app's configuration file.

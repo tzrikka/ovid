@@ -7,7 +7,7 @@ import (
 	"go.temporal.io/sdk/activity"
 	"go.temporal.io/sdk/worker"
 
-	"github.com/tzrikka/ovid/pkg/thrippy"
+	"github.com/tzrikka/ovid/internal/thrippy"
 )
 
 type API struct {
@@ -27,7 +27,7 @@ func LinkIDFlag(configFilePath altsrc.StringSourcer) cli.Flag {
 	}
 }
 
-// Register registers Temporal activities and workflows with the Ovid worker.
+// Register exposes Temporal activities and workflows through the Ovid worker.
 func Register(cmd *cli.Command, w worker.Worker) {
 	a := API{thrippy: thrippy.NewLinkClient(cmd.String("thrippy-link-slack"), cmd)}
 

@@ -1,3 +1,6 @@
+// Package temporal initializes a Temporal worker that provides
+// activities and workflows related to various third-party services,
+// which are defined and implemented in other Ovid packages.
 package temporal
 
 import (
@@ -11,7 +14,7 @@ import (
 	"github.com/tzrikka/ovid/pkg/slack"
 )
 
-// Start initializes logging and the Temporal worker.
+// Start initializes application logging and the Temporal worker.
 func Start(_ context.Context, cmd *cli.Command) error {
 	logger := initLog(cmd.Bool("dev"))
 
