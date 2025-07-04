@@ -26,7 +26,8 @@ type ReactionsAddResponse struct {
 	slackResponse
 }
 
-// https://docs.slack.dev/reference/methods/reactions.add
+// ReactionsAdd is a Temporal activity named [ReactionsAddName],
+// based on https://docs.slack.dev/reference/methods/reactions.add.
 func (a *API) ReactionsAdd(ctx context.Context, req *ReactionsAddRequest) (*ReactionsAddResponse, error) {
 	resp := new(ReactionsAddResponse)
 	if err := a.httpPost(ctx, ReactionsAddName, req, resp); err != nil {
@@ -56,7 +57,8 @@ type ReactionsGetResponse struct {
 	Channel string         `json:"channel,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/reactions.get
+// ReactionsGet is a Temporal activity named [ReactionsGetName],
+// based on https://docs.slack.dev/reference/methods/reactions.get.
 func (a *API) ReactionsGet(ctx context.Context, req *ReactionsGetRequest) (*ReactionsGetResponse, error) {
 	query := url.Values{}
 	if req.Channel != "" {
@@ -103,7 +105,8 @@ type ReactionsListResponse struct {
 	Items []map[string]any `json:"items,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/reactions.list
+// ReactionsList is a Temporal activity named [ReactionsListName],
+// based on https://docs.slack.dev/reference/methods/reactions.list.
 func (a *API) ReactionsList(ctx context.Context, req *ReactionsListRequest) (*ReactionsListResponse, error) {
 	query := url.Values{}
 	if req.User != "" {
@@ -153,7 +156,8 @@ type ReactionsRemoveResponse struct {
 	slackResponse
 }
 
-// https://docs.slack.dev/reference/methods/reactions.remove
+// ReactionsRemove is a Temporal activity named [ReactionsRemoveName],
+// based on https://docs.slack.dev/reference/methods/reactions.remove.
 func (a *API) ReactionsRemove(ctx context.Context, req *ReactionsRemoveRequest) (*ReactionsRemoveResponse, error) {
 	resp := new(ReactionsRemoveResponse)
 	if err := a.httpPost(ctx, ReactionsRemoveName, req, resp); err != nil {

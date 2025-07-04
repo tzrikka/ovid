@@ -18,7 +18,7 @@ func Start(_ context.Context, cmd *cli.Command) error {
 	c, err := client.Dial(client.Options{
 		HostPort:  cmd.String("temporal-host-port"),
 		Namespace: cmd.String("temporal-namespace"),
-		Logger:    LogAdapter{Logger: logger},
+		Logger:    logAdapter{zerolog: logger},
 	})
 	if err != nil {
 		return fmt.Errorf("client dial error: %w", err)
@@ -27,7 +27,7 @@ func Start(_ context.Context, cmd *cli.Command) error {
 
 	w := worker.New(c, cmd.String("temporal-task-queue"), worker.Options{})
 
-	slack.RegisterActivities(cmd, w)
+	slack.Register(cmd, w)
 
 	return w.Run(worker.InterruptCh())
 }

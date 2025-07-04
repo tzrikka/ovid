@@ -30,7 +30,8 @@ type ChatDeleteResponse struct {
 	TS      string `json:"ts,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/chat.delete
+// ChatDelete is a Temporal activity named [ChatDeleteName],
+// based on https://docs.slack.dev/reference/methods/chat.delete.
 func (a *API) ChatDelete(ctx context.Context, req *ChatDeleteRequest) (*ChatDeleteResponse, error) {
 	resp := new(ChatDeleteResponse)
 	if err := a.httpPost(ctx, ChatDeleteName, req, resp); err != nil {
@@ -56,7 +57,8 @@ type ChatGetPermalinkResponse struct {
 	Permalink string `json:"permalink,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/chat.getPermalink
+// ChatGetPermalink is a Temporal activity named [ChatGetPermalinkName],
+// based on https://docs.slack.dev/reference/methods/chat.getPermalink.
 func (a *API) ChatGetPermalink(ctx context.Context, req *ChatGetPermalinkRequest) (*ChatGetPermalinkResponse, error) {
 	query := url.Values{}
 	query.Set("channel", req.Channel)
@@ -98,7 +100,8 @@ type ChatPostEphemeralResponse struct {
 	MessageTS string `json:"message_ts,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/chat.postEphemeral
+// ChatPostEphemeral is a Temporal activity named [ChatPostEphemeralName],
+// based on https://docs.slack.dev/reference/methods/chat.postEphemeral.
 func (a *API) ChatPostEphemeral(ctx context.Context, req *ChatPostEphemeralRequest) (*ChatPostEphemeralResponse, error) {
 	resp := new(ChatPostEphemeralResponse)
 	if err := a.httpPost(ctx, ChatPostEphemeralName, req, resp); err != nil {
@@ -139,7 +142,8 @@ type ChatPostMessageResponse struct {
 	Message map[string]any `json:"message,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/chat.postMessage
+// ChatPostMessage is a Temporal activity named [ChatPostMessageName],
+// based on https://docs.slack.dev/reference/methods/chat.postMessage.
 func (a *API) ChatPostMessage(ctx context.Context, req *ChatPostMessageRequest) (*ChatPostMessageResponse, error) {
 	resp := new(ChatPostMessageResponse)
 	if err := a.httpPost(ctx, ChatPostMessageName, req, resp); err != nil {
@@ -179,7 +183,8 @@ type ChatUpdateResponse struct {
 	Message map[string]any `json:"message,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/chat.update
+// ChatUpdate is a Temporal activity named [ChatUpdateName],
+// based on https://docs.slack.dev/reference/methods/chat.update.
 func (a *API) ChatUpdate(ctx context.Context, req *ChatUpdateRequest) (*ChatUpdateResponse, error) {
 	resp := new(ChatUpdateResponse)
 	if err := a.httpPost(ctx, ChatUpdateName, req, resp); err != nil {

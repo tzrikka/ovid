@@ -27,6 +27,8 @@ const (
 // [url.Values]. For POST requests, it should be any struct that can be
 // encoded as JSON. Some errors (failure to construct a request or decode
 // a response body) are returned as non-retryable [temporal.ApplicationError]s.
+//
+// [temporal.ApplicationError]: https://pkg.go.dev/go.temporal.io/temporal#ApplicationError
 func HTTPRequest(ctx context.Context, httpMethod, u, authToken string, queryOrJSONBody any) ([]byte, error) {
 	req, cancel, err := constructRequest(ctx, httpMethod, u, authToken, queryOrJSONBody)
 	if err != nil {

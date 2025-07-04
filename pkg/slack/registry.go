@@ -14,6 +14,8 @@ type API struct {
 	thrippy thrippy.LinkClient
 }
 
+// LinkIDFlag defines a CLI flag for Slack's Thrippy link ID. This flag can also
+// be set using an environment variable and the application's configuration file.
 func LinkIDFlag(configFilePath altsrc.StringSourcer) cli.Flag {
 	return &cli.StringFlag{
 		Name:  "thrippy-link-slack",
@@ -25,7 +27,8 @@ func LinkIDFlag(configFilePath altsrc.StringSourcer) cli.Flag {
 	}
 }
 
-func RegisterActivities(cmd *cli.Command, w worker.Worker) {
+// Register registers Temporal activities and workflows with the Ovid worker.
+func Register(cmd *cli.Command, w worker.Worker) {
 	a := API{thrippy: thrippy.NewLinkClient(cmd.String("thrippy-link-slack"), cmd)}
 
 	registerActivity(w, a.ChatDelete, ChatDeleteName)

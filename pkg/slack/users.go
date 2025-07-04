@@ -34,7 +34,8 @@ type UsersConversationsResponse struct {
 	Channels []map[string]any `json:"channels,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/users.conversations
+// UsersConversations is a Temporal activity named [UsersConversationsName],
+// based on https://docs.slack.dev/reference/methods/users.conversations.
 func (a *API) UsersConversations(ctx context.Context, req *UsersConversationsRequest) (*UsersConversationsResponse, error) {
 	query := url.Values{}
 	if req.Cursor != "" {
@@ -83,7 +84,8 @@ type UsersGetPresenceResponse struct {
 	LastActivity    int64  `json:"last_activity,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/users.getPresence
+// UsersGetPresence is a Temporal activity named [UsersGetPresenceName],
+// based on https://docs.slack.dev/reference/methods/users.getPresence.
 func (a *API) UsersGetPresence(ctx context.Context, req *UsersGetPresenceRequest) (*UsersGetPresenceResponse, error) {
 	query := url.Values{}
 	if req.User != "" {
@@ -111,7 +113,8 @@ type UsersIdentityResponse struct {
 	Team map[string]any `json:"team,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/users.identity
+// UsersIdentity is a Temporal activity named [UsersIdentityName],
+// based on https://docs.slack.dev/reference/methods/users.identity.
 func (a *API) UsersIdentity(ctx context.Context, req *UsersIdentityRequest) (*UsersIdentityResponse, error) {
 	resp := new(UsersIdentityResponse)
 	if err := a.httpGet(ctx, UsersIdentityName, url.Values{}, resp); err != nil {
@@ -137,7 +140,8 @@ type UsersInfoResponse struct {
 	User map[string]any `json:"user,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/users.info
+// UsersInfo is a Temporal activity named [UsersInfoName],
+// based on https://docs.slack.dev/reference/methods/users.info.
 func (a *API) UsersInfo(ctx context.Context, req *UsersInfoRequest) (*UsersInfoResponse, error) {
 	query := url.Values{}
 	query.Set("user", req.User)
@@ -171,7 +175,8 @@ type UsersListResponse struct {
 	CacheTS int64            `json:"cache_ts,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/users.list
+// UsersList is a Temporal activity named [UsersListName],
+// based on https://docs.slack.dev/reference/methods/users.list.
 func (a *API) UsersList(ctx context.Context, req *UsersListRequest) (*UsersListResponse, error) {
 	query := url.Values{}
 	if req.Cursor != "" {
@@ -209,7 +214,8 @@ type UsersLookupByEmailResponse struct {
 	User map[string]any `json:"user,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/users.lookupByEmail
+// UsersLookupByEmail is a Temporal activity named [UsersLookupByEmailName],
+// based on https://docs.slack.dev/reference/methods/users.lookupByEmail.
 func (a *API) UsersLookupByEmail(ctx context.Context, req *UsersLookupByEmailRequest) (*UsersLookupByEmailResponse, error) {
 	query := url.Values{}
 	query.Set("email", req.Email)
@@ -237,7 +243,8 @@ type UsersProfileGetResponse struct {
 	Profile map[string]any `json:"profile,omitempty"`
 }
 
-// https://docs.slack.dev/reference/methods/users.profile.get
+// UsersProfileGet is a Temporal activity named [UsersProfileGetName],
+// based on https://docs.slack.dev/reference/methods/users.profile.get.
 func (a *API) UsersProfileGet(ctx context.Context, req *UsersProfileGetRequest) (*UsersProfileGetResponse, error) {
 	query := url.Values{}
 	if req.IncludeLabels {
