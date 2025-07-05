@@ -37,9 +37,8 @@ type ConversationsArchiveResponse struct {
 	slackResponse
 }
 
-// ConversationsArchive is a Temporal activity named [ConversationsArchiveName],
-// based on https://docs.slack.dev/reference/methods/conversations.archive.
-func (a *API) ConversationsArchive(ctx context.Context, req *ConversationsArchiveRequest) (*ConversationsArchiveResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.archive
+func (a *API) ConversationsArchiveActivity(ctx context.Context, req *ConversationsArchiveRequest) (*ConversationsArchiveResponse, error) {
 	resp := new(ConversationsArchiveResponse)
 	if err := a.httpPost(ctx, ConversationsArchiveName, req, resp); err != nil {
 		return nil, err
@@ -62,9 +61,8 @@ type ConversationsCloseResponse struct {
 	AlreadyClosed bool `json:"already_closed,omitempty"`
 }
 
-// ConversationsClose is a Temporal activity named [ConversationsCloseName],
-// based on https://docs.slack.dev/reference/methods/conversations.close.
-func (a *API) ConversationsClose(ctx context.Context, req *ConversationsCloseRequest) (*ConversationsCloseResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.close
+func (a *API) ConversationsCloseActivity(ctx context.Context, req *ConversationsCloseRequest) (*ConversationsCloseResponse, error) {
 	resp := new(ConversationsCloseResponse)
 	if err := a.httpPost(ctx, ConversationsCloseName, req, resp); err != nil {
 		return nil, err
@@ -90,9 +88,8 @@ type ConversationsCreateResponse struct {
 	Channel map[string]any `json:"channel,omitempty"`
 }
 
-// ConversationsCreate is a Temporal activity named [ConversationsCreateName],
-// based on https://docs.slack.dev/reference/methods/conversations.create.
-func (a *API) ConversationsCreate(ctx context.Context, req *ConversationsCreateRequest) (*ConversationsCreateResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.create
+func (a *API) ConversationsCreateActivity(ctx context.Context, req *ConversationsCreateRequest) (*ConversationsCreateResponse, error) {
 	resp := new(ConversationsCreateResponse)
 	if err := a.httpPost(ctx, ConversationsCreateName, req, resp); err != nil {
 		return nil, err
@@ -127,9 +124,8 @@ type ConversationsHistoryResponse struct {
 	// Undocumented: "channel_actions_ts" and "channel_actions_count".
 }
 
-// ConversationsHistory is a Temporal activity named [ConversationsHistoryName],
-// based on https://docs.slack.dev/reference/methods/conversations.history.
-func (a *API) ConversationsHistory(ctx context.Context, req *ConversationsHistoryRequest) (*ConversationsHistoryResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.history
+func (a *API) ConversationsHistoryActivity(ctx context.Context, req *ConversationsHistoryRequest) (*ConversationsHistoryResponse, error) {
 	query := url.Values{}
 	query.Set("channel", req.Channel)
 	if req.Cursor != "" {
@@ -176,9 +172,8 @@ type ConversationsInfoResponse struct {
 	Channel map[string]any `json:"channel,omitempty"`
 }
 
-// ConversationsInfo is a Temporal activity named [ConversationsInfoName],
-// based on https://docs.slack.dev/reference/methods/conversations.info.
-func (a *API) ConversationsInfo(ctx context.Context, req *ConversationsInfoRequest) (*ConversationsInfoResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.info
+func (a *API) ConversationsInfoActivity(ctx context.Context, req *ConversationsInfoRequest) (*ConversationsInfoResponse, error) {
 	query := url.Values{}
 	query.Set("channel", req.Channel)
 	if req.IncludeLocale {
@@ -214,9 +209,8 @@ type ConversationsInviteResponse struct {
 	Errors  []map[string]any `json:"errors,omitempty"`
 }
 
-// ConversationsInvite is a Temporal activity named [ConversationsInviteName],
-// based on https://docs.slack.dev/reference/methods/conversations.invite.
-func (a *API) ConversationsInvite(ctx context.Context, req *ConversationsInviteRequest) (*ConversationsInviteResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.invite
+func (a *API) ConversationsInviteActivity(ctx context.Context, req *ConversationsInviteRequest) (*ConversationsInviteResponse, error) {
 	resp := new(ConversationsInviteResponse)
 	if err := a.httpPost(ctx, ConversationsInviteName, req, resp); err != nil {
 		return nil, err
@@ -239,9 +233,8 @@ type ConversationsJoinResponse struct {
 	Channel map[string]any `json:"channel,omitempty"`
 }
 
-// ConversationsJoin is a Temporal activity named [ConversationsJoinName],
-// based on https://docs.slack.dev/reference/methods/conversations.join.
-func (a *API) ConversationsJoin(ctx context.Context, req *ConversationsJoinRequest) (*ConversationsJoinResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.join
+func (a *API) ConversationsJoinActivity(ctx context.Context, req *ConversationsJoinRequest) (*ConversationsJoinResponse, error) {
 	resp := new(ConversationsJoinResponse)
 	if err := a.httpPost(ctx, ConversationsJoinName, req, resp); err != nil {
 		return nil, err
@@ -264,9 +257,8 @@ type ConversationsKickResponse struct {
 	slackResponse
 }
 
-// ConversationsKick is a Temporal activity named [ConversationsKickName],
-// based on https://docs.slack.dev/reference/methods/conversations.kick.
-func (a *API) ConversationsKick(ctx context.Context, req *ConversationsKickRequest) (*ConversationsKickResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.kick
+func (a *API) ConversationsKickActivity(ctx context.Context, req *ConversationsKickRequest) (*ConversationsKickResponse, error) {
 	resp := new(ConversationsKickResponse)
 	if err := a.httpPost(ctx, ConversationsKickName, req, resp); err != nil {
 		return nil, err
@@ -289,9 +281,8 @@ type ConversationsLeaveResponse struct {
 	NotInChannel bool `json:"not_in_channel,omitempty"`
 }
 
-// ConversationsLeave is a Temporal activity named [ConversationsLeaveName],
-// based on https://docs.slack.dev/reference/methods/conversations.leave.
-func (a *API) ConversationsLeave(ctx context.Context, req *ConversationsLeaveRequest) (*ConversationsLeaveResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.leave
+func (a *API) ConversationsLeaveActivity(ctx context.Context, req *ConversationsLeaveRequest) (*ConversationsLeaveResponse, error) {
 	resp := new(ConversationsLeaveResponse)
 	if err := a.httpPost(ctx, ConversationsLeaveName, req, resp); err != nil {
 		return nil, err
@@ -318,9 +309,8 @@ type ConversationsListResponse struct {
 	Channels []map[string]any `json:"channels,omitempty"`
 }
 
-// ConversationsList is a Temporal activity named [ConversationsListName],
-// based on https://docs.slack.dev/reference/methods/conversations.list.
-func (a *API) ConversationsList(ctx context.Context, req *ConversationsListRequest) (*ConversationsListResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.list
+func (a *API) ConversationsListActivity(ctx context.Context, req *ConversationsListRequest) (*ConversationsListResponse, error) {
 	query := url.Values{}
 	if req.Cursor != "" {
 		query.Set("cursor", req.Cursor)
@@ -363,9 +353,8 @@ type ConversationsMembersResponse struct {
 	Members []string `json:"members,omitempty"`
 }
 
-// ConversationsMembers is a Temporal activity named [ConversationsMembersName],
-// based on https://docs.slack.dev/reference/methods/conversations.members.
-func (a *API) ConversationsMembers(ctx context.Context, req *ConversationsMembersRequest) (*ConversationsMembersResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.members
+func (a *API) ConversationsMembersActivity(ctx context.Context, req *ConversationsMembersRequest) (*ConversationsMembersResponse, error) {
 	query := url.Values{}
 	query.Set("channel", req.Channel)
 	if req.Cursor != "" {
@@ -402,9 +391,8 @@ type ConversationsOpenResponse struct {
 	Channel     map[string]any `json:"channel,omitempty"`
 }
 
-// ConversationsOpen is a Temporal activity named [ConversationsOpenName],
-// based on https://docs.slack.dev/reference/methods/conversations.open.
-func (a *API) ConversationsOpen(ctx context.Context, req *ConversationsOpenRequest) (*ConversationsOpenResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.open
+func (a *API) ConversationsOpenActivity(ctx context.Context, req *ConversationsOpenRequest) (*ConversationsOpenResponse, error) {
 	resp := new(ConversationsOpenResponse)
 	if err := a.httpPost(ctx, ConversationsOpenName, req, resp); err != nil {
 		return nil, err
@@ -428,9 +416,8 @@ type ConversationsRenameResponse struct {
 	Channel map[string]any `json:"channel,omitempty"`
 }
 
-// ConversationsRename is a Temporal activity named [ConversationsRenameName],
-// based on https://docs.slack.dev/reference/methods/conversations.rename.
-func (a *API) ConversationsRename(ctx context.Context, req *ConversationsRenameRequest) (*ConversationsRenameResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.rename
+func (a *API) ConversationsRenameActivity(ctx context.Context, req *ConversationsRenameRequest) (*ConversationsRenameResponse, error) {
 	resp := new(ConversationsRenameResponse)
 	if err := a.httpPost(ctx, ConversationsRenameName, req, resp); err != nil {
 		return nil, err
@@ -462,9 +449,8 @@ type ConversationsRepliesResponse struct {
 	HasMore  bool             `json:"has_more,omitempty"`
 }
 
-// ConversationsReplies is a Temporal activity named [ConversationsRepliesName],
-// based on https://docs.slack.dev/reference/methods/conversations.replies.
-func (a *API) ConversationsReplies(ctx context.Context, req *ConversationsRepliesRequest) (*ConversationsRepliesResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.replies
+func (a *API) ConversationsRepliesActivity(ctx context.Context, req *ConversationsRepliesRequest) (*ConversationsRepliesResponse, error) {
 	query := url.Values{}
 	query.Set("channel", req.Channel)
 	query.Set("ts", req.TS)
@@ -510,9 +496,8 @@ type ConversationsSetPurposeResponse struct {
 	Channel map[string]any `json:"channel,omitempty"` // Empirically different from the documentation.
 }
 
-// ConversationsSetPurpose is a Temporal activity named [ConversationsSetPurposeName],
-// based on https://docs.slack.dev/reference/methods/conversations.setPurpose.
-func (a *API) ConversationsSetPurpose(ctx context.Context, req *ConversationsSetPurposeRequest) (*ConversationsSetPurposeResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.setPurpose
+func (a *API) ConversationsSetPurposeActivity(ctx context.Context, req *ConversationsSetPurposeRequest) (*ConversationsSetPurposeResponse, error) {
 	resp := new(ConversationsSetPurposeResponse)
 	if err := a.httpPost(ctx, ConversationsSetPurposeName, req, resp); err != nil {
 		return nil, err
@@ -536,9 +521,8 @@ type ConversationsSetTopicResponse struct {
 	Channel map[string]any `json:"channel,omitempty"`
 }
 
-// ConversationsSetTopic is a Temporal activity named [ConversationsSetTopicName],
-// based on https://docs.slack.dev/reference/methods/conversations.setTopic.
-func (a *API) ConversationsSetTopic(ctx context.Context, req *ConversationsSetTopicRequest) (*ConversationsSetTopicResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.setTopic
+func (a *API) ConversationsSetTopicActivity(ctx context.Context, req *ConversationsSetTopicRequest) (*ConversationsSetTopicResponse, error) {
 	resp := new(ConversationsSetTopicResponse)
 	if err := a.httpPost(ctx, ConversationsSetTopicName, req, resp); err != nil {
 		return nil, err
@@ -559,9 +543,8 @@ type ConversationsUnarchiveResponse struct {
 	slackResponse
 }
 
-// ConversationsUnarchive is a Temporal activity named [ConversationsUnarchiveName],
-// based on https://docs.slack.dev/reference/methods/conversations.unarchive.
-func (a *API) ConversationsUnarchive(ctx context.Context, req *ConversationsUnarchiveRequest) (*ConversationsUnarchiveResponse, error) {
+// https://docs.slack.dev/reference/methods/conversations.unarchive
+func (a *API) ConversationsUnarchiveActivity(ctx context.Context, req *ConversationsUnarchiveRequest) (*ConversationsUnarchiveResponse, error) {
 	resp := new(ConversationsUnarchiveResponse)
 	if err := a.httpPost(ctx, ConversationsUnarchiveName, req, resp); err != nil {
 		return nil, err
